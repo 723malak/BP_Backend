@@ -13,11 +13,11 @@ public class SupervisorUsers {
 
     private final AgenceRepo agenceRepo;
 
-    @GetMapping("/auth/public/agence")
+    @GetMapping("/public/agence")
     public ResponseEntity<Object> getAllAgences() {
         return ResponseEntity.ok(agenceRepo.findAll());
     }
-    @PostMapping("/auth/supervisor/saveagence")
+    @PostMapping("/supervisor/saveagence")
     public ResponseEntity<Object> register(
             @RequestBody RegisterRequest agencereq
     ) {
