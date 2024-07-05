@@ -23,10 +23,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id ;
     private String nom;
-    private String prénom;
+    private String prenom;
     private String email;
     private String password;
     private String role;
+
+    @OneToMany(mappedBy = "traitepar")
+    private List<Devis> devisC;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

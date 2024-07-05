@@ -36,7 +36,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**", "/public/**").permitAll()
                         .requestMatchers("/supervisor/**").hasAuthority("SUPERVISOR")
                         .requestMatchers("/user/**").hasAuthority("USER")
-                        .requestMatchers("/supervisoruser/**").hasAnyAuthority("SUPERVISOR", "USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

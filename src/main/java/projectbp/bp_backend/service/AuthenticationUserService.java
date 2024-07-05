@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import projectbp.bp_backend.bean.User;
@@ -26,7 +29,7 @@ public class AuthenticationUserService {
         try {
             User user = new User();
             user.setNom(request.getNom());
-            user.setPrénom(request.getPrénom());
+            user.setPrenom(request.getPrenom());
             user.setEmail(request.getEmail());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(request.getRole());
@@ -88,6 +91,18 @@ public class AuthenticationUserService {
             return response;
         }
     }
-
-
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("Aucun utilisateur authentifié trouvé.");
+        }
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof UserDetails)) {
+            throw new IllegalStateException("Principal n'est pas une instance de UserDetails.");
+        }
+        UserDetails userDetails = (UserDetails) principal;
+        String username = userDetails.getUsername();
+        return user_repo.findByEmail(username)
+                .orElseThrow(() -> new IllegalStateException("Utilisateur non trouvé avec l'email : " + username));
+    }
 }

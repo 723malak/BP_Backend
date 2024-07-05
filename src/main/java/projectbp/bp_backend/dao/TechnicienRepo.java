@@ -2,13 +2,12 @@ package projectbp.bp_backend.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import projectbp.bp_backend.bean.Agence;
-import projectbp.bp_backend.bean.User;
+import projectbp.bp_backend.bean.Technicien;
 
 import java.util.Optional;
 
 @Repository
-public interface AgenceRepo extends JpaRepository<Agence, Long> {
+public interface TechnicienRepo extends JpaRepository<Technicien, Long> {
 
-    Optional<Agence> findByNom(String nom);
+    Optional<Technicien> findByMatricule(String matricule);
 }

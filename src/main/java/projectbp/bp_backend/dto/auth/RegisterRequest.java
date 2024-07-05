@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import projectbp.bp_backend.bean.Agence;
+import projectbp.bp_backend.bean.Devis;
 import projectbp.bp_backend.bean.User;
 
 import java.util.List;
@@ -26,10 +27,11 @@ public class RegisterRequest {
     private String refreshToken;
     private String expirationTime;
     private String nom;
-    private String prénom;
+    private String prenom;
     private String email;
     private String password;
     private String role;
     private User users;
     private List<Agence> agences;
+    private List<Devis> devis;
 }
