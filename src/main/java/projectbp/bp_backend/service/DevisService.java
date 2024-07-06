@@ -26,6 +26,11 @@ import static java.lang.Integer.parseInt;
 @RequiredArgsConstructor
 public class DevisService {
 
+    private final AuthenticationUserService authenticationUserService;
+    private final DevisRepo devis_repo;
+    private final AgenceRepo agenceRepo;
+    private final TechnicienRepo techRepo;
+
     public Optional<Devis> findByNumero(String numero) {
         return devis_repo.findByNumero(numero);
     }
@@ -70,6 +75,7 @@ public class DevisService {
     public Devis updateDevis(Long id, DevisRequest devisRequest) {
         Devis existingDevis = devis_repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Devis non trouvé avec l'ID : " + id));
+
         if (devisRequest.getNumero() != null) {
             existingDevis.setNumero(devisRequest.getNumero());
         }
@@ -89,20 +95,19 @@ public class DevisService {
             existingDevis.setAssurance(devisRequest.getAssurance());
         }
         if (devisRequest.getTechnicien() != null) {
-            existingDevis.setTechnicien(devisRequest.getTechnicien());
+            Technicien technicien = techRepo.findById(devisRequest.getTechnicien().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Technicien non trouvé avec l'ID : " + devisRequest.getTechnicien().getId()));
+            existingDevis.setTechnicien(technicien);
         }
+
+
         return devis_repo.save(existingDevis);
     }
-
-
-    public void deleteDevis(Long id) {
+public void deleteDevis(Long id) {
         if (!devis_repo.existsById(id)) {
             throw new EntityNotFoundException("Devis non trouvé avec l'ID : " + id);
         }
         devis_repo.deleteById(id);
     }
-    private final AuthenticationUserService authenticationUserService;
-    private final DevisRepo devis_repo;
-    private final AgenceRepo agenceRepo;
-    private final TechnicienRepo techRepo;
+
 }
