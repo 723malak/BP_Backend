@@ -15,22 +15,17 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Builder
-public class Devis {
+public class Facture {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String numero;
-    private Date date;
-    private String equipementE;
-    private String prestataire;
+    private Date date_facture;
+    private Date date_traitement;
     private Double montant;
-    private Boolean assurance;
 
     @ManyToOne
-    private Technicien technicien;
-
-    @ManyToOne
-    private Agence agence;
+    private Devis devis;
 
     @ManyToOne
     private User traitepar;
@@ -49,4 +44,7 @@ public class Devis {
             throw new IllegalStateException("Aucun utilisateur authentifié trouvé.");
         }
     }
+
+
+
 }

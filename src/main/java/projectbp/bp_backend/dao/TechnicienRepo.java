@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface TechnicienRepo extends JpaRepository<Technicien, Long> {
 
     Optional<Technicien> findByMatricule(String matricule);
+    Optional<Technicien> findByNom(String nom);
 }

@@ -20,9 +20,6 @@ public class Technicien {
     private Long id;
     private String matricule;
     private String nom;
-    private String prenom;
-    private String specialite;
 
-    @OneToMany(mappedBy = "technicien")
-    private List<Devis> devis;
+
 }

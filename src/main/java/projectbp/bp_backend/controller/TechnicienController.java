@@ -18,22 +18,27 @@ public class TechnicienController {
     public Optional<Technicien> findByMatricule(@PathVariable String matricule) {
         return techService.findByMatricule(matricule);
     }
+
     @GetMapping("/public/technicien")
     public List<Technicien> getAllTechniciens() {
         return techService.findAll();
     }
+
     @PostMapping("/supervisor/savetechnicien")
     public Technicien saveTechnicien(@RequestBody TechnicienRequest technicienRequest) {
         return techService.saveTechnicien(technicienRequest);
     }
-    @DeleteMapping("/supervisor/deletetechnicien/{id}")
+
+    @PostMapping("/supervisor/deletetechnicien/{id}")
     public void deleteTechnicien(@PathVariable Long id) {
         techService.deleteTechnicien(id);
     }
-    @PutMapping("/supervisor/updatetechnicien/{id}")
+
+    @PostMapping("/supervisor/updatetechnicien/{id}")
     public Technicien updateTechnicien(@PathVariable Long id,  @RequestBody  TechnicienRequest technicienRequest) {
         return techService.updateTechnicien(id, technicienRequest);
     }
 
     private final TechnicienService techService;
+
 }

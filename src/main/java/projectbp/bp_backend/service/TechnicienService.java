@@ -25,8 +25,6 @@ public class TechnicienService {
     public Technicien saveTechnicien(TechnicienRequest technicienRequest) {
         Technicien technicien = Technicien.builder()
                 .nom(technicienRequest.getNom())
-                .prenom(technicienRequest.getPrenom())
-                .specialite(technicienRequest.getSpecialite())
                 .matricule(technicienRequest.getMatricule())
                 .build();
         return techRepo.save(technicien);
@@ -35,12 +33,15 @@ public class TechnicienService {
         return techRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Technicien non trouvé avec l'ID : " + id));
     }
+
     public Technicien updateTechnicien(Long id, TechnicienRequest technicienRequest) {
         Technicien existingTechnicien = findById(id);
-        existingTechnicien.setNom(technicienRequest.getNom());
-        existingTechnicien.setPrenom(technicienRequest.getPrenom());
-        existingTechnicien.setSpecialite(technicienRequest.getSpecialite());
-        existingTechnicien.setMatricule(technicienRequest.getMatricule());
+        if (technicienRequest.getNom() != null) {
+            existingTechnicien.setNom(technicienRequest.getNom());
+        }
+        if (technicienRequest.getMatricule() != null) {
+            existingTechnicien.setMatricule(technicienRequest.getMatricule());
+        }
         return techRepo.save(existingTechnicien);
     }
     public void deleteTechnicien(Long id) {

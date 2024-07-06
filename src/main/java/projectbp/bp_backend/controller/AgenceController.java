@@ -5,8 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectbp.bp_backend.bean.Agence;
+import projectbp.bp_backend.bean.Devis;
 import projectbp.bp_backend.dao.AgenceRepo;
+import projectbp.bp_backend.dto.CRUD.AgenceRequest;
+import projectbp.bp_backend.dto.CRUD.DevisRequest;
 import projectbp.bp_backend.dto.auth.RegisterRequest;
+import projectbp.bp_backend.service.AgenceService;
 
 import java.util.Optional;
 
@@ -14,48 +18,38 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AgenceController {
 
-    private final AgenceRepo agenceRepo;
+    private final AgenceService agenceService;
 
     @GetMapping("/public/agence")
     public ResponseEntity<Object> getAllAgences() {
-        return ResponseEntity.ok(agenceRepo.findAll());
+        return ResponseEntity.ok(agenceService.findAll());
     }
+
 
     @GetMapping("/public/agence/nom/{nom}")
     public Optional<Agence> findByNom(@PathVariable  String nom) {
-        return agenceRepo.findByNom(nom);
+        return agenceService.findByNom(nom);
     }
+
     @PostMapping("/supervisor/saveagence")
-    public ResponseEntity<Object> createAg(
-            @RequestBody RegisterRequest agencereq
-    ) {
-        Agence ag = new Agence();
-        ag.setNom(agencereq.getNom());
-        return ResponseEntity.ok(agenceRepo.save(ag));
+    public ResponseEntity<Object> createAg(@RequestBody AgenceRequest agencereq) {
+        return ResponseEntity.ok(agenceService.createAgence(agencereq));
     }
-    @PutMapping("/supervisor/saveagence/{id}")
-    public ResponseEntity<Agence> updateAgence(
-            @PathVariable Long id,
-            @RequestBody RegisterRequest agencereq
-    ) {
-        Agence existingAgence = agenceRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Agence non trouvée avec l'ID : " + id));
-        existingAgence.setNom(agencereq.getNom());
-        Agence updatedAgence = agenceRepo.save(existingAgence);
-        return ResponseEntity.ok(updatedAgence);
+
+    @PostMapping("/supervisor/updateAgence/{id}")
+    public ResponseEntity<Agence> updateAgence( @PathVariable Long id, @RequestBody AgenceRequest agencereq) {
+
+        Agence agence = agenceService.updateAgence(id, agencereq);
+        return ResponseEntity.ok(agence);
     }
-    @DeleteMapping("/supervisor/deleteagence/{id}")
+
+    @PostMapping("/supervisor/deleteagence/{id}")
     public ResponseEntity<Void> deleteAgence(@PathVariable Long id) {
-        if (!agenceRepo.existsById(id)) {
-            throw new EntityNotFoundException("Agence non trouvée avec l'ID : " + id);
-        }
-        agenceRepo.deleteById(id);
+        agenceService.deleteAgence(id);
         return ResponseEntity.noContent().build();
     }
 
-        @GetMapping("/user/alone")
-    public ResponseEntity<Object> useralone() {
-        return ResponseEntity.ok("User alone can access this api");
-    }
+
+
 
 }
