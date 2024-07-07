@@ -26,6 +26,16 @@ public class Devis {
     private Double montant;
     private Boolean assurance;
 
+    @Column(nullable = false)
+    private Boolean rejected = false;
+
+    @Column(nullable = false)
+    private Boolean notificationSent = false;
+
+    @Column(nullable = false)
+    private Boolean handled = false;
+
+
     @ManyToOne
     private Technicien technicien;
 
@@ -49,4 +59,5 @@ public class Devis {
             throw new IllegalStateException("Aucun utilisateur authentifié trouvé.");
         }
     }
+
 }

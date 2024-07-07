@@ -56,7 +56,6 @@ public class DevisService {
             return ResponseEntity.badRequest().body("Agence not found");
         }
 
-        System.out.println("le nom est :" + existingTechnicien.get().getNom());
 
         Devis devis = new Devis();
         devis.setNumero(devisRequest.getNumero());
@@ -67,6 +66,7 @@ public class DevisService {
         devis.setAssurance(devisRequest.getAssurance());
         devis.setTechnicien(existingTechnicien.get());
         devis.setAgence(existingAgence.get());
+        devis.setRejected(devisRequest.getRejected());
         devis.setTraitepar(user);
         return ResponseEntity.ok(devis_repo.save(devis));
     }
@@ -88,7 +88,7 @@ public class DevisService {
         if (devisRequest.getPrestataire() != null) {
             existingDevis.setPrestataire(devisRequest.getPrestataire());
         }
-        if (devisRequest.getMontant() != 0) {
+        if (devisRequest.getMontant() != null) {
             existingDevis.setMontant(devisRequest.getMontant() * 1.2);
         }
         if (devisRequest.getAssurance() != null) {
