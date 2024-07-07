@@ -82,7 +82,7 @@ public class DevisService {
         if (devisRequest.getPrestataire() != null) {
             existingDevis.setPrestataire(devisRequest.getPrestataire());
         }
-        if (devisRequest.getMontant() != 0) {
+        if (devisRequest.getMontant() != null) {
             existingDevis.setMontant(devisRequest.getMontant() * 1.2);
         }
         if (devisRequest.getAssurance() != null) {
