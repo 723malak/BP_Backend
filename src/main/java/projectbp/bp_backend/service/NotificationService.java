@@ -12,6 +12,7 @@ import projectbp.bp_backend.dao.NotificationRepo;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 @Service
 public class NotificationService {
@@ -25,50 +26,77 @@ public class NotificationService {
     @Autowired
     private NotificationRepo notificationRepo;
 
-    /*
-    public void checkAndCreateNotifications() {
-        List<Devis> devisList = devisRepo.findAll();
-        Date currentDate = new Date();
 
-        for (Devis devis : devisList) {
-            long diffInMillies = Math.abs(currentDate.getTime() - devis.getDate().getTime());
-            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-
-            if (diff >= 30 && !factureRepo.existsByDevis(devis)) {
-                createNotification(devis);
-            }
-        }
-    }
-    */
-
-    public void checkAndCreateNotifications() {
-        List<Devis> devisList = devisRepo.findAll();
-        Date currentDate = new Date();
-
-        for (Devis devis : devisList) {
-            long diffInMillies = Math.abs(currentDate.getTime() - devis.getDate().getTime());
-            long diffInSeconds = diffInMillies / (1000 * 60 * 60);
-
-            if (diffInSeconds >= 10 && !factureRepo.existsByDevis(devis)) {
-                createNotification(devis);
-            }
-        }
+    public Optional<Notification> getNotificationById(Long id) {
+        return notificationRepo.findById(id);
     }
 
 
-    private void createNotification(Devis devis) {
-        User user = devis.getTraitepar();
-        String message = "Devis " + devis.getNumero() + " has no associated facture for over 30 days.";
+    public void deleteNotification(Long notificationId) {
+        notificationRepo.deleteById(notificationId);
+    }
 
-        Notification notification = Notification.builder()
-                .message(message)
-                .user(user)
-                .build();
-
-        notificationRepo.save(notification);
+    public void deleteAllNotifications(User user) {
+        List<Notification> notifications = notificationRepo.findByUser(user);
+        notificationRepo.deleteAll(notifications);
     }
 
     public List<Notification> getNotificationsForUser(User user) {
         return notificationRepo.findByUser(user);
     }
+
+    public void checkAndCreateNotifications() {
+        List<Devis> devisList = devisRepo.findAllByRejectedFalseAndNotificationSentFalseAndHandledFalse();
+        Date currentDate = new Date();
+
+        for (Devis devis : devisList) {
+            if (shouldCreateNotification(devis, currentDate)) {
+                createNotification(devis);
+                devis.setNotificationSent(true);
+                devisRepo.save(devis);
+            }
+        }
+    }
+
+    private boolean shouldCreateNotification(Devis devis, Date currentDate) {
+        long diffInSeconds = (currentDate.getTime() - devis.getDate().getTime()) / 1000;
+        return diffInSeconds >= 10 && !factureRepo.existsByDevis(devis);
+    }
+
+    private void createNotification(Devis devis) {
+        User user = devis.getTraitepar();
+        String message = "Devis " + devis.getNumero() + " requires attention. No facture associated after 30 days.";
+
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setUser(user);
+        notification.setDevis(devis);
+        notification.setRead(false);
+
+        notificationRepo.save(notification);
+        System.out.println("Created notification for Devis: " + devis.getNumero());
+    }
+
+    public void markNotificationAsRead(Long notificationId) {
+        Optional<Notification> optionalNotification = notificationRepo.findById(notificationId);
+        if (optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            notification.setRead(true);
+            notificationRepo.save(notification);
+
+            Devis devis = notification.getDevis();
+            devis.setHandled(true);
+            devisRepo.save(devis);
+
+            System.out.println("Marked notification as read and Devis as handled: " + devis.getNumero());
+        } else {
+            throw new RuntimeException("Notification not found: " + notificationId);
+        }
+    }
+
+    public List<Notification> getUnreadNotificationsForUser(User user) {
+        return notificationRepo.findByUserAndReadFalse(user);
+    }
+
+
 }

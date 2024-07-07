@@ -34,6 +34,7 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**", "/public/**").permitAll()
+                        .requestMatchers("/api/notifications").authenticated()
                         .requestMatchers("/supervisor/**").hasAuthority("SUPERVISOR")
                         .requestMatchers("/user/**").hasAuthority("USER")
                         .anyRequest().authenticated()

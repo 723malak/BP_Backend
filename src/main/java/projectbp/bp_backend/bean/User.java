@@ -1,5 +1,6 @@
 package projectbp.bp_backend.bean;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,11 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Notification> notifications;
+
 
     @OneToMany(mappedBy = "traitepar")
     private List<Devis> devisC;

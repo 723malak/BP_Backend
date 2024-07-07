@@ -22,6 +22,7 @@ public class DevisRequest {
     private String prestataire;
     private Double montant;
     private Boolean assurance;
+    private Boolean rejected;
     private Technicien technicien;
     private Agence agence;
 

@@ -5,12 +5,11 @@ import org.springframework.stereotype.Repository;
 import projectbp.bp_backend.bean.Agence;
 import projectbp.bp_backend.bean.Devis;
 
+import java.util.List;
 import java.util.Optional;
 @Repository
 public interface DevisRepo extends JpaRepository<Devis , Long> {
 
     Optional<Devis> findByNumero(String numero);
-
-
-
+    List<Devis> findAllByRejectedFalseAndNotificationSentFalseAndHandledFalse();
 }

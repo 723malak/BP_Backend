@@ -5,15 +5,19 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import projectbp.bp_backend.service.NotificationService;
 
+import java.util.Date;
+
 @Component
 public class ScheduledTasks {
 
     @Autowired
     private NotificationService notificationService;
 
-    /*@Scheduled(cron = "0 0 0 * * ?") */ // Run once a day at midnight
-    @Scheduled(fixedRate = 1000)
+
+    @Scheduled(fixedRate = 5000)
     public void checkDevisAndCreateNotifications() {
+        System.out.println("Running scheduled task at " + new Date());
         notificationService.checkAndCreateNotifications();
     }
 }
+/*@Scheduled(cron = "0 0 0 * * ?") */

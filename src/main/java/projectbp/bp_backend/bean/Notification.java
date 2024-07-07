@@ -1,5 +1,6 @@
 package projectbp.bp_backend.bean;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,14 +18,27 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String message;
-    private Date notificationDate;
+
+    @Column(name = "`read`")
+    private Boolean read = false;
 
     @ManyToOne
+    @JoinColumn(name = "devis_id")
+    private Devis devis;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
+    private Date createdAt;
+
+
     @PrePersist
-    public void setNotificationDate() {
-        this.notificationDate = new Date();
+    protected void onCreate() {
+        createdAt = new Date();
     }
+
+
 }
