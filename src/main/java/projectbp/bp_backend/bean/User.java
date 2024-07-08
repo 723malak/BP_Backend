@@ -34,6 +34,14 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Notification> notifications;
 
+    @OneToMany(mappedBy = "sender")
+    @JsonIgnore
+    private List<Demande> demandesEnvoyees;
+
+    @OneToMany(mappedBy = "receiver")
+    @JsonIgnore
+    private List<Demande> demandesRecues;
+
 
     @OneToMany(mappedBy = "traitepar")
     private List<Devis> devisC;
