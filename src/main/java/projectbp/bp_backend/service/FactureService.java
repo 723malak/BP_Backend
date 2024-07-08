@@ -115,7 +115,7 @@ public class FactureService {
             return false;
         }
         try {
-            Double.parseDouble(factureRequest.getMontant());
+            Double.parseDouble(String.valueOf(factureRequest.getMontant()));
         } catch (NumberFormatException e) {
             return false;
         }
