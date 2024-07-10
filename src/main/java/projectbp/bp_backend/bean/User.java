@@ -38,6 +38,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "traitepar")
     private List<Devis> devisC;
 
+    @OneToMany(mappedBy = "demandeur")
+    @JsonIgnore
+    private List<Demande> demandes;
+
+    @OneToMany(mappedBy = "handledBy")
+    @JsonIgnore
+    private List<Demande> handledDemandes;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));

@@ -2,12 +2,14 @@ package projectbp.bp_backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import projectbp.bp_backend.bean.Demande;
 import projectbp.bp_backend.bean.Devis;
 import projectbp.bp_backend.bean.Notification;
 import projectbp.bp_backend.bean.User;
 import projectbp.bp_backend.dao.DevisRepo;
 import projectbp.bp_backend.dao.FactureRepo;
 import projectbp.bp_backend.dao.NotificationRepo;
+import projectbp.bp_backend.dao.UserRepo;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,9 @@ public class NotificationService {
 
     @Autowired
     private NotificationRepo notificationRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
 
     public Optional<Notification> getNotificationById(Long id) {
@@ -98,5 +103,18 @@ public class NotificationService {
         return notificationRepo.findByUserAndReadFalse(user);
     }
 
+    public void notifySupervisors(Demande demande) {
+        List<User> supervisors = userRepo.findByRole("SUPERVISOR");
+        for (User supervisor : supervisors) {
+            // Implement your notification logic here (e.g., email, in-app notification)
+            System.out.println("Notification sent to " + supervisor.getEmail() +
+                    " about new demande: " + demande.getMessage());
+        }
+    }
 
+    public void notifyUser(Demande demande) {
+        // Implement your notification logic here
+        System.out.println("Notification sent to " + demande.getDemandeur().getEmail() +
+                " about demande status: " + demande.getStatus());
+    }
 }
