@@ -41,7 +41,7 @@ public class FactureController {
         return ResponseEntity.ok(updatedFacture);
     }
 
-    @PostMapping("/supervisor/deleteFacture/{id}")
+    @DeleteMapping("/supervisor/deleteFacture/{id}")
     public ResponseEntity<Void> deleteFacture(@PathVariable Long id) {
         factureService.deleteFacture(id);
         return ResponseEntity.noContent().build();

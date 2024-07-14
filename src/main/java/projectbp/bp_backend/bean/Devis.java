@@ -1,5 +1,6 @@
 package projectbp.bp_backend.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class Devis {
     @Column(nullable = false)
     private Boolean rejected = false;
 
+
     @Column(nullable = false)
     private Boolean notificationSent = false;
 
@@ -39,16 +41,22 @@ public class Devis {
     private Boolean handled = false;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JsonDeserialize(using = TechnicienDeserializer.class)
     private Technicien technicien;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JsonDeserialize(using = AgenceDeserializer.class)
     private Agence agence;
 
     @ManyToOne
+    @JsonIgnoreProperties({"devisC"})
     private User traitepar;
+
+    public Devis(String numero) {
+        this.numero = numero;
+    }
+
 
     @PrePersist
     public void initTraitepar() {

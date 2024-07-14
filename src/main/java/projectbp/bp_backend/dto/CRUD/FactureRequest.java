@@ -23,6 +23,6 @@ public class FactureRequest {
     private Date date_traitement;
     private Double montant;
     private Devis devis;
-
+    private UserRequest traitepar;
 
 }

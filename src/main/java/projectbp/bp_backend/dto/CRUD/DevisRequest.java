@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DevisRequest {
-
+    private long id;
     private String numero;
     private Date date;
     private String equipementE;
@@ -25,6 +25,7 @@ public class DevisRequest {
     private Boolean rejected;
     private Technicien technicien;
     private Agence agence;
+    private UserRequest traitepar;
 
 
 }

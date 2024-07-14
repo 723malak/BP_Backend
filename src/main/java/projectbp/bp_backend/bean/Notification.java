@@ -25,7 +25,7 @@ public class Notification {
     @Column(name = "`read`")
     private Boolean read = false;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "devis_id")
     @JsonIgnoreProperties("notifications")
     private Devis devis;

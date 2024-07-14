@@ -21,12 +21,11 @@ public class DevisController {
     public Optional<Devis> findByNumero(@PathVariable String numero) {
         return devisService.findByNumero(numero);
     }
-
-
     @GetMapping("/public/devis")
     public ResponseEntity<Object> getAllDevis() {
         return ResponseEntity.ok(devisService.findAll());
     }
+
 
 
     @PostMapping("/public/savedevis")
@@ -36,8 +35,8 @@ public class DevisController {
 
 
     @PostMapping("/supervisor/updatedevis/{id}")
-    public ResponseEntity<Devis> updateDevis(@PathVariable Long id, @RequestBody DevisRequest devisRequest) {
-        Devis updatedDevis = devisService.updateDevis(id, devisRequest);
+    public ResponseEntity<Object> updateDevis(@PathVariable Long id, @RequestBody DevisRequest devisRequest) {
+        ResponseEntity<Object> updatedDevis = devisService.updateDevis(id, devisRequest);
         return ResponseEntity.ok(updatedDevis);
     }
 

@@ -1,5 +1,7 @@
 package projectbp.bp_backend.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import projectbp.bp_backend.deserializer.DevisDeserializer;
+import projectbp.bp_backend.deserializer.TechnicienDeserializer;
 
 import java.util.Date;
 
@@ -24,10 +28,12 @@ public class Facture {
     private Date date_traitement;
     private Double montant;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonDeserialize(using = DevisDeserializer.class)
     private Devis devis;
 
     @ManyToOne
+    @JsonIgnoreProperties({"FactureC"})
     private User traitepar;
 
     @PrePersist
