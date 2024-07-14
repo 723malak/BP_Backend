@@ -29,7 +29,7 @@ public class TechnicienController {
         return techService.saveTechnicien(technicienRequest);
     }
 
-    @PostMapping("/supervisor/deletetechnicien/{id}")
+    @DeleteMapping("/supervisor/deletetechnicien/{id}")
     public void deleteTechnicien(@PathVariable Long id) {
         techService.deleteTechnicien(id);
     }

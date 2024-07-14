@@ -41,7 +41,7 @@ public class DevisController {
         return ResponseEntity.ok(updatedDevis);
     }
 
-    @PostMapping("/supervisor/deletedevis/{id}")
+    @DeleteMapping("/supervisor/deletedevis/{id}")
     public ResponseEntity<Void> deleteDevis(@PathVariable Long id) {
         devisService.deleteDevis(id);
         return ResponseEntity.noContent().build();

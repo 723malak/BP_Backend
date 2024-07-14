@@ -9,11 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import projectbp.bp_backend.bean.Agence;
 import projectbp.bp_backend.bean.User;
 import projectbp.bp_backend.dao.UserRepo;
 import projectbp.bp_backend.dto.auth.RegisterRequest;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,15 @@ public class AuthenticationUserService {
     public RegisterRequest register(RegisterRequest request) {
       RegisterRequest resp = new RegisterRequest();
         try {
+
+            Optional<User> existingUser = user_repo.findByEmail(request.getEmail());
+            if (existingUser.isPresent()) {
+                resp.setStatusCode(400);
+                resp.setError("Email already exists");
+                return resp;
+            }
+
+
             User user = new User();
             user.setNom(request.getNom());
             user.setPrenom(request.getPrenom());
@@ -59,6 +70,8 @@ public class AuthenticationUserService {
             response.setStatusCode(200);
             response.setToken(jwt);
             response.setRole(String.valueOf(user.getRole()));
+            response.setPrenom(String.valueOf(user.getPrenom()));
+            response.setEmail(String.valueOf(user.getEmail()));
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully Logged In");
@@ -105,4 +118,6 @@ public class AuthenticationUserService {
         return user_repo.findByEmail(username)
                 .orElseThrow(() -> new IllegalStateException("Utilisateur non trouvé avec l'email : " + username));
     }
+
+
 }

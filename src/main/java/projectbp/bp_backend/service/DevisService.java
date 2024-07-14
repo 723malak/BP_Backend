@@ -45,13 +45,10 @@ public class DevisService {
         if (!existingTechnicien.isPresent()) {
             return ResponseEntity.badRequest().body("Technicien not found");
         }
-
         Optional<Agence> existingAgence = agenceRepo.findByNom(devisRequest.getAgence().getNom());
         if (!existingAgence.isPresent()) {
             return ResponseEntity.badRequest().body("Agence not found");
         }
-
-
         Devis devis = new Devis();
         devis.setNumero(devisRequest.getNumero());
         devis.setDate(new Date());
@@ -63,7 +60,8 @@ public class DevisService {
         devis.setAgence(existingAgence.get());
         devis.setRejected(devisRequest.getRejected());
         devis.setTraitepar(user);
-        return ResponseEntity.ok(devis_repo.save(devis));
+        devis_repo.save(devis);
+        return ResponseEntity.ok("Your Devis is created successfully");
     }
 
 

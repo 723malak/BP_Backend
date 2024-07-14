@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import projectbp.bp_backend.bean.Agence;
 import projectbp.bp_backend.bean.User;
 import projectbp.bp_backend.dto.auth.RegisterRequest;
 import projectbp.bp_backend.service.AuthenticationUserService;
+
+import java.util.Optional;
 
 
 @RestController
@@ -46,6 +49,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving current user: " + e.getMessage());
         }
     }
+    
 
 
 }

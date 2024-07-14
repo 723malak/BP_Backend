@@ -26,15 +26,6 @@ public class JwtService {
     }
 
 
-  /*  public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key)
-                .compact();
-    }*/
-
 //new modif
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();

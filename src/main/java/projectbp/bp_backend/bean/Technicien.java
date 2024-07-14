@@ -1,5 +1,6 @@
 package projectbp.bp_backend.bean;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +22,8 @@ public class Technicien {
     private String matricule;
     private String nom;
 
+    public Technicien(String nom) {
+        this.nom = nom;
+    }
 
 }

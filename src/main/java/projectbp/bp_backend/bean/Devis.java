@@ -1,5 +1,6 @@
 package projectbp.bp_backend.bean;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import projectbp.bp_backend.deserializer.AgenceDeserializer;
+import projectbp.bp_backend.deserializer.TechnicienDeserializer;
 
 import java.util.Date;
 
@@ -37,9 +40,11 @@ public class Devis {
 
 
     @ManyToOne
+    @JsonDeserialize(using = TechnicienDeserializer.class)
     private Technicien technicien;
 
     @ManyToOne
+    @JsonDeserialize(using = AgenceDeserializer.class)
     private Agence agence;
 
     @ManyToOne

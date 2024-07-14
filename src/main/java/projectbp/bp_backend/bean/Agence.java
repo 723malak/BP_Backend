@@ -19,4 +19,9 @@ public class Agence {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id ;
     private String nom;
+
+
+    public Agence(String nom) {
+        this.nom = nom;
+    }
 }

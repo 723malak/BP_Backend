@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping
 public class AgenceController {
 
     private final AgenceService agenceService;
@@ -43,7 +44,7 @@ public class AgenceController {
         return ResponseEntity.ok(agence);
     }
 
-    @PostMapping("/supervisor/deleteagence/{id}")
+    @DeleteMapping("/supervisor/deleteagence/{id}")
     public ResponseEntity<Void> deleteAgence(@PathVariable Long id) {
         agenceService.deleteAgence(id);
         return ResponseEntity.noContent().build();
