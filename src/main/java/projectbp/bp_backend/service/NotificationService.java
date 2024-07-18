@@ -69,7 +69,9 @@ public class NotificationService {
     }
 
     private void createNotification(Devis devis) {
-        User user = devis.getTraitepar();
+        Devis freshDevis = devisRepo.findById(devis.getId()).orElseThrow(() -> new RuntimeException("Devis not found"));
+
+        User user = freshDevis.getTraitepar();
         String message = "Devis " + devis.getNumero() + " requires attention. No facture associated after 30 days.";
 
         Notification notification = new Notification();
@@ -79,7 +81,9 @@ public class NotificationService {
         notification.setRead(false);
 
         notificationRepo.save(notification);
-        System.out.println("Created notification for Devis: " + devis.getNumero());
+        freshDevis.setNotificationSent(true);
+        devisRepo.save(freshDevis);
+        System.out.println("Created notification for Devis: " + freshDevis.getNumero());
     }
 
     public void markNotificationAsRead(Long notificationId) {

@@ -31,4 +31,5 @@ public class DemandeResponse {
     private String responseMessage;
     private Date createdDate;
     private Date handledDate;
+    private boolean isRead;
 }

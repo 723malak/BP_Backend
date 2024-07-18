@@ -34,11 +34,25 @@ public class DemandeService {
     private FactureRepo factureRepository;
 
 
-    public List<Demande> findAll() {
-        return demandeRepository.findAll();
+
+
+    public List<DemandeRequest> findAll() {
+        List<Demande> demandes = demandeRepository.findAll();
+        return demandes.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-
+    private DemandeRequest convertToDTO(Demande demande) {
+        DemandeRequest dto = new DemandeRequest();
+        //dto.setId(demande.getId());
+        dto.setType(demande.getType());
+        dto.setNumero(demande.getNumero());
+        dto.setMessage(demande.getMessage());
+        dto.setDescription(demande.getDescription());
+        dto.setRead(demande.getIsRead());
+        return dto;
+    }
 
     public ResponseEntity<Object> createDemande(DemandeRequest demandeRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -71,6 +85,7 @@ public class DemandeService {
      public List<DemandeResponse> getFeedbackForUser(User user) {
         List<Demande> demandes = demandeRepository.findByDemandeur(user);
         return demandes.stream()
+                .filter(demande -> demande.getStatus().equals("Handled") || demande.getStatus().equals("Rejected"))
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -88,6 +103,8 @@ public class DemandeService {
         response.setResponseMessage(demande.getResponseMessage());
         response.setCreatedDate(demande.getCreatedDate());
         response.setHandledDate(demande.getHandledDate());
+        response.setRead(demande.getIsRead());
+
         return response;
     }
 
@@ -119,6 +136,18 @@ public class DemandeService {
                 " about demande status: " + demande.getStatus());
     }
 
+    public Demande markAsRead(Long id) {
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid demande ID"));
+
+        demande.setIsRead(true);
+        return demandeRepository.save(demande);
+    }
+
+    public long countPendingDemandesForSupervisor() {
+        return demandeRepository.countByStatus( "Pending");
+    }
+
 
     public void notifySupervisors(Demande demande) {
         List<User> supervisors = userRepository.findByRole("SUPERVISOR");
@@ -143,5 +172,8 @@ public class DemandeService {
         return demandeRepository.findByStatus("Pending");
     }
 
-
+    public void deleteAllFeedbacksForUser(User user) {
+        List<Demande> userFeedbacks = demandeRepository.findByDemandeur(user);
+        demandeRepository.deleteAll(userFeedbacks);
+    }
 }

@@ -22,6 +22,7 @@ public class Demande {
     private String numero;  // ID of the related Facture or Devis
     private String message;
     private String description;
+    private Boolean isRead = false; // New field
 
     @ManyToOne
     private User demandeur;

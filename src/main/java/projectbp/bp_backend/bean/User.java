@@ -36,6 +36,7 @@ public class User implements UserDetails {
 
 
     @OneToMany(mappedBy = "traitepar")
+    @JsonIgnore
     private List<Devis> devisC;
 
     @OneToMany(mappedBy = "demandeur")

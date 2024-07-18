@@ -21,11 +21,27 @@ public class DemandeController {
     private DemandeService demandeService;
 
 
+   /* @GetMapping("/all")
+    public ResponseEntity<Object> getAllDemandes() {
+        return ResponseEntity.ok(demandeService.findAll());
+    }*/
+
+
     @GetMapping("/all")
     public ResponseEntity<Object> getAllDemandes() {
         return ResponseEntity.ok(demandeService.findAll());
     }
 
+    @PostMapping("/feedback/{id}/read")
+    public ResponseEntity<Object> markAsRead(@PathVariable Long id) {
+        Demande demande = demandeService.markAsRead(id);
+        return ResponseEntity.ok(demande);
+    }
+    @GetMapping("/unread-count")
+    public ResponseEntity<Long> getUnreadDemandCount() {
+        long count = demandeService.countPendingDemandesForSupervisor();
+        return ResponseEntity.ok(count);
+    }
 
 
     @PostMapping("/create")
@@ -76,5 +92,11 @@ public class DemandeController {
             return ResponseEntity.status(403).body(e.getMessage());
         }
     }
-
+    @PostMapping("/deleteAllFeedbacks")
+    public ResponseEntity<Void> deleteAllFeedbacks() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        demandeService.deleteAllFeedbacksForUser(currentUser);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -111,7 +111,11 @@ public class DevisService {
             existingDevis.setPrestataire(devisRequest.getPrestataire());
         }
         if (devisRequest.getMontant() != null) {
-            existingDevis.setMontant(devisRequest.getMontant() * 1.2);
+            if (existingDevis.getMontant().doubleValue() != devisRequest.getMontant().doubleValue()) {
+                existingDevis.setMontant(devisRequest.getMontant() * 1.2);
+            } else {
+                existingDevis.setMontant(devisRequest.getMontant());
+            }
         }
         if (devisRequest.getAssurance() != null) {
             existingDevis.setAssurance(devisRequest.getAssurance());

@@ -25,7 +25,7 @@ public class Notification {
     @Column(name = "`read`")
     private Boolean read = false;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "devis_id")
     @JsonIgnoreProperties("notifications")
     private Devis devis;

@@ -104,7 +104,12 @@ public class FactureService {
             existingFacture.setDate_facture(factureRequest.getDate_facture());
         }
         if(factureRequest.getMontant() != null) {
-            existingFacture.setMontant(factureRequest.getMontant() * 1.2);
+            if (existingFacture.getMontant().doubleValue() != factureRequest.getMontant().doubleValue()) {
+                existingFacture.setMontant(factureRequest.getMontant() * 1.2);
+            } else {
+                existingFacture.setMontant(factureRequest.getMontant());
+            }
+
         }
         if (factureRequest.getDevis() != null && factureRequest.getDevis().getNumero() != null) {
             Optional<Devis> existingDevis = devisRepo.findByNumero(factureRequest.getDevis().getNumero());

@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DemandeRequest {
+    //private Long id;
     private String type;
     private String numero;
     private String message;
     private String description;
+    private boolean isRead;
 }
