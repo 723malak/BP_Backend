@@ -92,6 +92,19 @@ public class DemandeController {
             return ResponseEntity.status(403).body(e.getMessage());
         }
     }
+
+    @GetMapping("/allfeedback")
+    public ResponseEntity<Object> getAllUserFeedback() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        try {
+            List<DemandeResponse> feedback = demandeService.getAllFeedbacksForUser(currentUser);
+            return ResponseEntity.ok(feedback);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
+    }
     @PostMapping("/deleteAllFeedbacks")
     public ResponseEntity<Void> deleteAllFeedbacks() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

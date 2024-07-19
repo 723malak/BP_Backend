@@ -10,12 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import projectbp.bp_backend.bean.Agence;
+import projectbp.bp_backend.bean.Demande;
 import projectbp.bp_backend.bean.User;
 import projectbp.bp_backend.dao.UserRepo;
+import projectbp.bp_backend.dto.CRUD.DemandeRequest;
 import projectbp.bp_backend.dto.auth.RegisterRequest;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -82,6 +87,7 @@ public class AuthenticationUserService {
         }
         return response;
     }
+
     public RegisterRequest  refreshToken(RegisterRequest  refreshTokenReqiest){
         RegisterRequest response = new RegisterRequest ();
         try{
@@ -119,5 +125,49 @@ public class AuthenticationUserService {
                 .orElseThrow(() -> new IllegalStateException("Utilisateur non trouvé avec l'email : " + username));
     }
 
+    public List<User> findAll() {
+        return user_repo.findAll();
+    }
+    public RegisterRequest updateUser(RegisterRequest request) {
+        RegisterRequest response = new RegisterRequest();
+        try {
+            Optional<User> existingUser = user_repo.findByEmail(request.getEmail());
+            if (existingUser.isEmpty()) {
+                response.setStatusCode(404);
+                response.setError("User not found");
+                return response;
+            }
+
+            User user = existingUser.get();
+            user.setNom(request.getNom());
+            user.setPrenom(request.getPrenom());
+            if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+                //user.setPassword(passwordEncoder.encode(request.getPassword()));
+                if (!user.getPassword().equals(request.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(request.getPassword()));
+                } else {
+                    user.setPassword(request.getPassword());
+                }
+            }
+            user.setRole(request.getRole());
+            User updatedUser = user_repo.save(user);
+
+            response.setUsers(updatedUser);
+            response.setMessage("User updated successfully");
+            response.setStatusCode(200);
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setError(e.getMessage());
+        }
+        return response;
+    }
+
+    public void deleteUser(Long id) {
+        user_repo.deleteById(id);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return user_repo.findByEmail(email);
+    }
 
 }

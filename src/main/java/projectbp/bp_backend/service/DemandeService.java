@@ -90,6 +90,13 @@ public class DemandeService {
                 .collect(Collectors.toList());
     }
 
+     public List<DemandeResponse> getAllFeedbacksForUser(User user) {
+        List<Demande> demandes = demandeRepository.findByDemandeur(user);
+        return demandes.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     private DemandeResponse mapToResponse(Demande demande) {
         DemandeResponse response = new DemandeResponse();
         response.setId(demande.getId());
@@ -173,7 +180,12 @@ public class DemandeService {
     }
 
     public void deleteAllFeedbacksForUser(User user) {
-        List<Demande> userFeedbacks = demandeRepository.findByDemandeur(user);
-        demandeRepository.deleteAll(userFeedbacks);
+        //List<Demande> userFeedbacks = demandeRepository.findByDemandeur(user);
+
+        List<Demande> demandesToDelete = demandeRepository.findByDemandeur(user).stream()
+                .filter(demande -> !demande.getStatus().equals("Pending"))
+                .collect(Collectors.toList());
+
+        demandeRepository.deleteAll(demandesToDelete);
     }
 }

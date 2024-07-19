@@ -3,6 +3,7 @@ package projectbp.bp_backend.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import projectbp.bp_backend.bean.User;
 import projectbp.bp_backend.dto.auth.RegisterRequest;
 import projectbp.bp_backend.service.AuthenticationUserService;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -49,7 +51,34 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving current user: " + e.getMessage());
         }
     }
-    
+
+    @GetMapping("/supervisor/getAll")
+    public ResponseEntity<Object> getAllUsers() {
+        return ResponseEntity.ok(authservice.findAll());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/supervisor/updateUser/{id}")
+    public ResponseEntity<RegisterRequest> updateUser(@PathVariable Long id, @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authservice.updateUser(request));
+    }
+
+    @DeleteMapping("/supervisor/deleteUser/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        authservice.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user/email/{email}")
+    public Optional<User> getUserByEmail(@PathVariable String email) {
+        return authservice.findByEmail(email);
+    }
 
 
 }
