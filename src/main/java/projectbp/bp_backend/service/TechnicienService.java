@@ -1,8 +1,11 @@
 package projectbp.bp_backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import projectbp.bp_backend.bean.Devis;
 import projectbp.bp_backend.bean.Technicien;
+import projectbp.bp_backend.dao.DevisRepo;
 import projectbp.bp_backend.dao.TechnicienRepo;
 import projectbp.bp_backend.dto.CRUD.TechnicienRequest;
 
@@ -44,12 +47,20 @@ public class TechnicienService {
         }
         return techRepo.save(existingTechnicien);
     }
-    public void deleteTechnicien(Long id) {
+    public ResponseEntity<Object> deleteTechnicien(Long id) {
         Technicien technicienToDelete = techRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Technicien non trouvé avec l'ID : " + id));
 
+        List<Devis> relatedDevis = devis_repo.findByTechnicien(technicienToDelete);
+
+        if (!relatedDevis.isEmpty()) {
+
+            return ResponseEntity.badRequest().body("Ce Technicien est liee aux devis");
+        }
         techRepo.delete(technicienToDelete);
+        return ResponseEntity.ok("Done");
     }
 
     private final TechnicienRepo techRepo;
+    private final DevisRepo devis_repo;
 }

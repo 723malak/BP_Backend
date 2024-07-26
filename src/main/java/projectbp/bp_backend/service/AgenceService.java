@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import projectbp.bp_backend.bean.Agence;
+import projectbp.bp_backend.bean.Devis;
 import projectbp.bp_backend.bean.User;
 import projectbp.bp_backend.dao.AgenceRepo;
+import projectbp.bp_backend.dao.DevisRepo;
 import projectbp.bp_backend.dto.CRUD.AgenceRequest;
 
 import java.util.Date;
@@ -50,12 +52,20 @@ public class AgenceService {
     }
 
 
-    public void deleteAgence(Long id) {
-        if (!agence_repo.existsById(id)) {
-            throw new EntityNotFoundException("Agence non trouvé avec l'ID : " + id);
+    public  ResponseEntity<Object> deleteAgence(Long id) {
+        Agence agence = agence_repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Agence non trouvée avec l'ID : " + id));
+
+        List<Devis> relatedDevis = devis_repo.findByAgence(agence);
+
+        if (!relatedDevis.isEmpty()) {
+            return ResponseEntity.badRequest().body("Cette agence est liee aux devis");
         }
+
         agence_repo.deleteById(id);
+        return ResponseEntity.ok("Done");
     }
     private final AgenceRepo agence_repo;
+    private final DevisRepo devis_repo;
 
 }

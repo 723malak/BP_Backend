@@ -45,9 +45,9 @@ public class AgenceController {
     }
 
     @DeleteMapping("/supervisor/deleteagence/{id}")
-    public ResponseEntity<Void> deleteAgence(@PathVariable Long id) {
-        agenceService.deleteAgence(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> deleteAgence(@PathVariable Long id) {
+
+        return agenceService.deleteAgence(id);
     }
 
 

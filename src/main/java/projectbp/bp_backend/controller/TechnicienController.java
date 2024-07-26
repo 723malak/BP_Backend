@@ -1,6 +1,7 @@
 package projectbp.bp_backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import projectbp.bp_backend.bean.Technicien;
@@ -30,8 +31,8 @@ public class TechnicienController {
     }
 
     @DeleteMapping("/supervisor/deletetechnicien/{id}")
-    public void deleteTechnicien(@PathVariable Long id) {
-        techService.deleteTechnicien(id);
+    public ResponseEntity<Object> deleteTechnicien(@PathVariable Long id) {
+        return techService.deleteTechnicien(id);
     }
 
     @PostMapping("/supervisor/updatetechnicien/{id}")

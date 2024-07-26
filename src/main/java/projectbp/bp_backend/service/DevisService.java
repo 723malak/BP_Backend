@@ -123,6 +123,9 @@ public class DevisService {
         if (devisRequest.getTechnicien() != null) {
             existingDevis.setTechnicien(devisRequest.getTechnicien());
         }
+        if (devisRequest.getAgence() != null) {
+            existingDevis.setAgence(devisRequest.getAgence());
+        }
         devis_repo.save(existingDevis);
         return ResponseEntity.ok("Devis updated successfully");
     }

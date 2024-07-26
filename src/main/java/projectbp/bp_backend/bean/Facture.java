@@ -28,7 +28,7 @@ public class Facture {
     private Date date_traitement;
     private Double montant;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JsonDeserialize(using = DevisDeserializer.class)
     private Devis devis;
 
